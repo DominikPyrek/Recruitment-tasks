@@ -1,5 +1,8 @@
-from AppImapRED_Lib.main import main
+from AppImapRED_Lib.processingEmails import processingEmails
 import time
-while True:
-    main()
-    time.sleep(60)
+if __name__ == "__main__":
+    while True:
+        processingEmails()
+        print("Emails Checked")
+        time.sleep(60)
+
