@@ -15,6 +15,6 @@ imap_port = os.getenv("port")
 def login():
     imap_connect = imaplib.IMAP4_SSL(imap_addres, imap_port)
     imap_connect.login(username, password)
-    imap_connect.select()
+    imap_connect.select('inbox')
     return imap_connect
 

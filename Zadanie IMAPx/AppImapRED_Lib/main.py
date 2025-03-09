@@ -1,24 +1,42 @@
 from login import login
-from fetch import fetch
-import email 
+from fetchMailIds import fetch
+from dotenv import load_dotenv
+import email, os
+load_dotenv()
+
+save_to = os.getenv("save_to")
 
 session = login()
-messeges = fetch(session)
+mes_ids = fetch(session)
 
-for msg in messeges:
-    for response in msg:
-        if type(response) is tuple:
-            my_msg = email.message_from_bytes((response[1]))
-            subject = my_msg['subject']
-            if msg.get_content_type() == "multipart":
+for mes_id in mes_ids:
+    _, msg_data = session.fetch(mes_id, '(RFC822)')
+    for response in msg_data:
+
+        if isinstance(response, tuple):
+            
+            msg = email.message_from_bytes(response[1])
+            subject = msg["Subject"]
+
+            if isinstance(subject, bytes):
+                subject = subject.decode()
+
+            if msg.get_content_maintype() == 'multipart':
                 for part in msg.walk():
-                    if part.get_conten_type() == "multipart":
+                    if part.get_content_maintype() == 'multipart':
                         continue
                     if part.get('Content-Disposition') is None:
                         continue
 
-                    file = part.get_filename()
-                    if file:
-                        filepath = os.path.join('/home/WebDevLinux/Pobrane/', file)
-                        with open('/home/WebDevLinux/Pobrane/', 'wb') as f:
+                    filename = part.get_filename()
+                    if filename:
+                        filepath_file = os.path.join(save_to, filename)
+                        with open(filepath_file, 'wb') as f:
                             f.write(part.get_payload(decode=True))
+                        filepath_subject = os.path.join(save_to, subject)
+                        with open(filepath_subject, "w") as f:
+                            f.write(subject)
+                        session.copy(mes_id, "OLD-RED")
+                        session.store(mes_id, '+FLAGS', '\\Deleted')
+
+            
