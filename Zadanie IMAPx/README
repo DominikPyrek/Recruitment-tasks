@@ -1,0 +1,28 @@
+IMAP Email Processor
+
+This project is a Python script that automates the processing of emails from an IMAP server. 
+It fetches emails with a specific subject (e.g., "RED"), downloads attachments, saves the subject to a file, 
+and moves processed emails to a designated folder (e.g., "OLD-RED"). The script is designed to run continuously, 
+checking for new emails at regular intervals(base: 1min).
+
+Before Using
+
+Before running the script, you must edit the .env file to include your IMAP server credentials and configuration. This file is used to securely store sensitive information such as your username, password, and server details.
+
+Features
+
+    IMAP Authentication: Connects to an IMAP server using SSL and authenticates with a username and password.
+    Email Filtering: Fetches emails with a specific subject (e.g., "RED").
+    Attachment Handling: Downloads attachments from emails and saves them to a specified directory.
+    Email Management: Moves processed emails to a designated folder (e.g., "OLD-RED") and marks them for deletion.
+    Continuous Operation: Runs in an infinite loop, checking for new emails at a configurable interval.
+
+Project Structure
+
+    login.py: Handles IMAP server connection and authentication.
+    fetchMailIds.py: Fetches email IDs with the specified subject.
+    main.py: Processes emails, downloads attachments, and manages email movement.
+    AppImapRED.py: Runs the main script in an infinite loop with a delay between iterations.
+
+
+
